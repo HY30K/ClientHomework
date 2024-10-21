@@ -1,0 +1,111 @@
+.App-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1e1e2f;
+}
+
+.swap-container {
+  width: 400px;
+  padding: 20px;
+  background-color: #2c2c3e;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.swap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.settings-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  background-color: #1f1f2e;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.input-group .input {
+  flex: 1;
+  font-size: 24px;
+  background-color: transparent;
+  border: none;
+  color: #ddd;
+}
+
+.input-group .input:focus {
+  outline: none;
+}
+
+.token-select {
+  margin-left: 10px;
+  background-color: #3c3c4e;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.swap-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.swap-arrow button {
+  background-color: #3c3c4e;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+}
+
+.swap-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  background-color: #4b4b61;
+  color: #888;
+  border: none;
+  border-radius: 12px;
+  cursor: not-allowed;
+  text-align: center;
+}
+
+.swap-button.enabled {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+footer {
+  margin-top: 20px;
+  text-align: center;
+  color: #888;
+}
+
+footer a {
+  color: #007bff;
+  text-decoration: none;
+}
