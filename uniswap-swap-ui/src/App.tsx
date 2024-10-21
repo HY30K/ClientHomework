@@ -1,25 +1,68 @@
 import React, { useState } from 'react';
 import './App.css';
+import TokenInput from './components/TokenInput';
+import SwapButton from './components/SwapButton';
+import Modal from './components/Modal';
+
+const tokenList = [
+  { symbol: 'ETH', name: 'Ether' },
+  { symbol: 'WETH', name: 'Wrapped Ether' },
+  { symbol: 'DAI', name: 'Dai' },
+  { symbol: 'USDC', name: 'USD Coin' },
+  { symbol: 'USDT', name: 'Tether' },
+  { symbol: 'WBTC', name: 'Wrapped Bitcoin' },
+  { symbol: 'AAVE', name: 'Aave' },
+];
 
 const App: React.FC = () => {
-  const [amountFrom, setAmountFrom] = useState<string>('');  // 상단 입력 필드 상태
-  const [amountTo, setAmountTo] = useState<string>('');      // 하단 입력 필드 상태
-  const [isFromFocused, setIsFromFocused] = useState<boolean>(true); // 어느 인풋이 포커스 되었는지 체크
+  const [amountFrom, setAmountFrom] = useState<string>('');
+  const [amountTo, setAmountTo] = useState<string>('');
+  const [isFromFocused, setIsFromFocused] = useState<boolean>(true);
 
-  const handleSwap = () => {
-    alert(`Swapping ${amountFrom} DAI to ${amountTo} USDC`);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedToken1, setSelectedToken1] = useState<string>('ETH');
+  const [selectedToken2, setSelectedToken2] = useState<string>('USDC');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [recentTokens, setRecentTokens] = useState<string[]>([]);
+
+  const [selectedTokenInput, setSelectedTokenInput] = useState<1 | 2>(1); // 1번 혹은 2번 토큰 버튼 활성화 상태
+
+  const handleAlert = () => {
+    alert('준비 중입니다');
   };
 
-  const handleSettings = () => {
-    alert('준비 중입니다');
+  const handleOpenModal = (inputNumber: 1 | 2) => {
+    setSelectedTokenInput(inputNumber);  // 현재 열릴 모달의 버튼 번호를 저장
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleTokenSelect = (token: string) => {
+    if (selectedTokenInput === 1) {
+      setSelectedToken1(token);
+    } else if (selectedTokenInput === 2) {
+      setSelectedToken2(token);
+    }
+
+    updateRecentTokens(token);
+    handleCloseModal();
+  };
+
+  const updateRecentTokens = (token: string) => {
+    setRecentTokens((prev) => {
+      const newRecent = [token, ...prev.filter((t) => t !== token)];
+      return newRecent.slice(0, 7);
+    });
   };
 
   const handleAmountFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAmountFrom(value);
-    // 여기에서 스왑 비율에 따른 계산 로직을 구현하세요
     if (isFromFocused) {
-      const calculatedAmount = calculateSwap(value); // 가상 계산 함수
+      const calculatedAmount = calculateSwap(value);
       setAmountTo(calculatedAmount);
     }
   };
@@ -27,77 +70,62 @@ const App: React.FC = () => {
   const handleAmountToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAmountTo(value);
-    // 반대로 하단 필드 입력 시 상단 필드도 반영
     if (!isFromFocused) {
-      const calculatedAmount = calculateSwapReverse(value); // 반대로 계산하는 가상 함수
+      const calculatedAmount = calculateSwapReverse(value);
       setAmountFrom(calculatedAmount);
     }
   };
 
   const calculateSwap = (value: string) => {
-    // 가상의 계산 로직, 환율 적용 가능
-    const rate = 1.1; // 가정: DAI 1개 = USDC 1.1개
+    const rate = 1.1;
     return (parseFloat(value) * rate).toFixed(2);
   };
 
   const calculateSwapReverse = (value: string) => {
-    // 가상의 반대로 계산하는 로직
-    const rate = 1.1; // 동일하게 적용
+    const rate = 1.1;
     return (parseFloat(value) / rate).toFixed(2);
   };
 
   return (
     <div className="App">
       <header className="App-header">
+
         <div className="swap-container">
+          
           <div className="swap-header">
             <h3>스왑</h3>
-            
-            <button className="settings-button" onClick={handleSettings}>⚙️</button>
-
+            <button className="settings-button" onClick={handleAlert}>⚙️</button>
           </div>
 
-          {/* From Token Input */}
-          <div className="input-group">
-            <input
-              type="number"
-              placeholder="0.0"
-              value={amountFrom}
-              onChange={handleAmountFromChange}
-              className="input"
-              onFocus={() => setIsFromFocused(true)}
-              step="0.0000000001"
-            />
-            <button className="token-select">DAI</button>
-          </div>
+          <TokenInput
+            amount={amountFrom}
+            onAmountChange={handleAmountFromChange}
+            isFocused={isFromFocused}
+            setIsFocused={setIsFromFocused}
+            selectedToken={selectedToken1}
+            onTokenSelect={() => handleOpenModal(1)}  // 1번 버튼 클릭 시 모달 열기
+            openModal={() => handleOpenModal(1)}
+          />
 
-          {/* Swap Arrow */}
           <div className="swap-arrow">
-            <button>↓</button>
+            <button>⬇️</button>
           </div>
 
-          {/* To Token Input */}
-          <div className="input-group">
-            <input
-              type="number"
-              placeholder="0.0"
-              value={amountTo}
-              onChange={handleAmountToChange}
-              className="input"
-              onFocus={() => setIsFromFocused(false)}
-              step="0.0000000001"
-            />
-            <button className="token-select">USDC</button>
-          </div>
+          <TokenInput
+            amount={amountTo}
+            onAmountChange={handleAmountToChange}
+            isFocused={!isFromFocused}
+            setIsFocused={() => setIsFromFocused(false)}
+            selectedToken={selectedToken2}
+            onTokenSelect={() => handleOpenModal(2)}  // 2번 버튼 클릭 시 모달 열기
+            openModal={() => handleOpenModal(2)}
+          />
 
-          {/* Swap Button */}
-          <button
-            className={`swap-button ${(amountFrom && amountTo) ? 'enabled' : ''}`}
-            onClick={handleSwap}
-            disabled={!(amountFrom && amountTo)}
-          >
-            {(amountFrom && amountTo) ? '스왑' : '금액을 입력하세요'}
-          </button>
+          <SwapButton
+            amountFrom={amountFrom}
+            amountTo={amountTo}
+            onSwap={handleAlert}
+          />
 
         </div>
 
@@ -106,6 +134,16 @@ const App: React.FC = () => {
         </footer>
 
       </header>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        tokens={tokenList}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        recentTokens={recentTokens}
+        onTokenSelect={handleTokenSelect}
+      />
     </div>
   );
 };

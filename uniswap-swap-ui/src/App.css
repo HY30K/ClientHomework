@@ -109,3 +109,109 @@ footer a {
   color: #007bff;
   text-decoration: none;
 }
+
+
+/* 메인 토큰 선택 버튼 */
+.token-select {
+  background-color: #3c3c4e;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* 모달 오버레이 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 모달 컨텐츠 */
+.modal-content {
+  background-color: #2c2c3e;
+  padding: 20px;
+  border-radius: 12px;
+  width: 400px;
+  color: white;
+}
+
+/* 모달 헤더 */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.modal-header input {
+  width: 80%;
+  padding: 10px;
+  background-color: #1e1e2f;
+  border: none;
+  border-radius: 8px;
+  color: white;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* 최근 토큰 목록 */
+.recent-tokens {
+  margin-bottom: 15px;
+}
+
+.recent-tokens-list button {
+  background-color: #3c3c4e;
+  border: none;
+  padding: 8px 12px;
+  margin-right: 5px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+/* 토큰 목록 */
+.token-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.token-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #1f1f2e;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.token-item:hover {
+  background-color: #3c3c4e;
+}
+
+/* 토큰 목록 관리 버튼 */
+.manage-tokens {
+  width: 100%;
+  background-color: #4b4b61;
+  border: none;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 8px;
+  color: #888;
+  cursor: pointer;
+}
