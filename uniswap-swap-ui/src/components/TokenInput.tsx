@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface TokenInputProps {
   amount: string;
@@ -6,13 +6,34 @@ interface TokenInputProps {
   isFocused: boolean;
   setIsFocused: (focused: boolean) => void;
   selectedToken: string;
-  onTokenSelect: (token: string) => void;
-  openModal: () => void;
+  onTokenSelect: () => void;
 }
 
 const TokenInput: React.FC<TokenInputProps> = ({
-  amount, onAmountChange, isFocused, setIsFocused, selectedToken, onTokenSelect, openModal
+  amount,
+  onAmountChange,
+  isFocused,
+  setIsFocused,
+  selectedToken,
+  onTokenSelect,
 }) => {
+  const [storedToken, setStoredToken] = useState<string>(selectedToken);
+
+  // localStorage에서 토큰 불러오기
+  useEffect(() => {
+    const savedToken = localStorage.getItem('storedToken');
+    if (savedToken) {
+      setStoredToken(savedToken);
+    }
+  }, []);
+
+  // 토큰이 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    if (storedToken) {
+      localStorage.setItem('storedToken', storedToken);
+    }
+  }, [storedToken]);
+
   return (
     <div className="input-group">
       <input
@@ -24,7 +45,9 @@ const TokenInput: React.FC<TokenInputProps> = ({
         onFocus={() => setIsFocused(true)}
         step="0.0000000001"
       />
-      <button className="token-select" onClick={openModal}>{selectedToken}</button>
+      <button className="token-select" onClick={onTokenSelect}>
+        {storedToken}
+      </button>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import TokenInput from './components/TokenInput';
 import SwapButton from './components/SwapButton';
@@ -25,14 +25,38 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [recentTokens, setRecentTokens] = useState<string[]>([]);
 
-  const [selectedTokenInput, setSelectedTokenInput] = useState<1 | 2>(1); // 1번 혹은 2번 토큰 버튼 활성화 상태
+  const [selectedTokenInput, setSelectedTokenInput] = useState<1 | 2>(1);
+
+  // localStorage에서 최근 선택한 토큰 불러오기
+  useEffect(() => {
+    const savedToken1 = localStorage.getItem('selectedToken1');
+    const savedToken2 = localStorage.getItem('selectedToken2');
+    const savedRecentTokens = localStorage.getItem('recentTokens');
+
+    if (savedToken1) {
+      setSelectedToken1(savedToken1);
+    }
+    if (savedToken2) {
+      setSelectedToken2(savedToken2);
+    }
+    if (savedRecentTokens) {
+      setRecentTokens(JSON.parse(savedRecentTokens));
+    }
+  }, []);
+
+  // 최근 선택한 토큰을 localStorage에 저장하기
+  useEffect(() => {
+    localStorage.setItem('selectedToken1', selectedToken1);
+    localStorage.setItem('selectedToken2', selectedToken2);
+    localStorage.setItem('recentTokens', JSON.stringify(recentTokens));
+  }, [selectedToken1, selectedToken2, recentTokens]);
 
   const handleAlert = () => {
     alert('준비 중입니다');
   };
 
   const handleOpenModal = (inputNumber: 1 | 2) => {
-    setSelectedTokenInput(inputNumber);  // 현재 열릴 모달의 버튼 번호를 저장
+    setSelectedTokenInput(inputNumber);
     setIsModalOpen(true);
   };
 
@@ -89,9 +113,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">
-
         <div className="swap-container">
-          
           <div className="swap-header">
             <h3>스왑</h3>
             <button className="settings-button" onClick={handleAlert}>⚙️</button>
@@ -103,8 +125,7 @@ const App: React.FC = () => {
             isFocused={isFromFocused}
             setIsFocused={setIsFromFocused}
             selectedToken={selectedToken1}
-            onTokenSelect={() => handleOpenModal(1)}  // 1번 버튼 클릭 시 모달 열기
-            openModal={() => handleOpenModal(1)}
+            onTokenSelect={() => handleOpenModal(1)} 
           />
 
           <div className="swap-arrow">
@@ -117,8 +138,7 @@ const App: React.FC = () => {
             isFocused={!isFromFocused}
             setIsFocused={() => setIsFromFocused(false)}
             selectedToken={selectedToken2}
-            onTokenSelect={() => handleOpenModal(2)}  // 2번 버튼 클릭 시 모달 열기
-            openModal={() => handleOpenModal(2)}
+            onTokenSelect={() => handleOpenModal(2)} 
           />
 
           <SwapButton
@@ -126,18 +146,17 @@ const App: React.FC = () => {
             amountTo={amountTo}
             onSwap={handleAlert}
           />
-
         </div>
 
         <footer>
           <p>Uniswap 사용 가능: <a href="/">English</a></p>
         </footer>
-
       </header>
 
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        onAlert={handleAlert}
         tokens={tokenList}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
