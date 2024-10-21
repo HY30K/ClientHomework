@@ -1,69 +1,78 @@
+/* App 헤더 섹션: 전체 화면을 채우고 가운데 정렬하는 레이아웃 */
 .App-header {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #1e1e2f;
+  background-color: #1e1e2f; /* 어두운 배경색 */
 }
 
+/* 스왑 컨테이너: 토큰 스왑 UI 박스 */
 .swap-container {
-  width: 400px;
-  padding: 20px;
-  background-color: #2c2c3e;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  width: 400px; /* 너비 400px */
+  padding: 20px; /* 내부 여백 */
+  background-color: #2c2c3e; /* 어두운 배경색 */
+  border-radius: 20px; /* 둥근 모서리 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
 }
 
+/* 스왑 헤더: 제목과 설정 버튼을 포함한 상단 바 */
 .swap-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* 양 끝에 요소 배치 */
   align-items: center;
   margin-bottom: 20px;
-  color: #fff;
+  color: #fff; /* 텍스트 색상 흰색 */
 }
 
+/* 설정 버튼 스타일: 톱니바퀴 아이콘이 들어갈 예정 */
 .settings-button {
   background: none;
   border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #fff;
+  font-size: 24px; /* 큰 글꼴 크기 */
+  cursor: pointer; /* 커서 포인터(클릭 가능) */
+  color: #fff; /* 흰색 */
 }
 
+/* 입력 그룹: 토큰과 금액 입력을 포함하는 영역 */
 .input-group {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-  background-color: #1f1f2e;
+  background-color: #1f1f2e; /* 어두운 배경 */
   padding: 15px;
-  border-radius: 15px;
+  border-radius: 15px; /* 둥근 모서리 */
 }
 
+/* 입력 필드 스타일: 토큰 금액 입력 필드 */
 .input-group .input {
-  flex: 1;
-  font-size: 24px;
-  background-color: transparent;
-  border: none;
-  color: #ddd;
+  flex: 1; /* 가로로 최대한 늘어남 */
+  font-size: 24px; /* 큰 글꼴 크기 */
+  background-color: transparent; /* 투명 배경 */
+  border: none; /* 테두리 없음 */
+  color: #ddd; /* 텍스트 색상 밝은 회색 */
 }
 
+/* 입력 필드 포커스 스타일 */
 .input-group .input:focus {
-  outline: none;
+  outline: none; /* 포커스 시 테두리 없음 */
 }
 
+/* 토큰 선택 버튼 스타일 */
 .token-select {
   margin-left: 10px;
-  background-color: #3c3c4e;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 12px;
+  background-color: #3c3c4e; /* 어두운 배경 */
+  border: none; /* 테두리 없음 */
+  padding: 10px 15px; /* 내부 여백 */
+  border-radius: 12px; /* 둥근 모서리 */
   color: white;
   font-size: 16px;
-  cursor: pointer;
+  cursor: pointer; /* 커서 포인터(클릭 가능) */
 }
 
+/* 스왑 화살표 버튼 */
 .swap-arrow {
   display: flex;
   justify-content: center;
@@ -72,9 +81,9 @@
 }
 
 .swap-arrow button {
-  background-color: #3c3c4e;
+  background-color: #3c3c4e; /* 어두운 배경 */
   border: none;
-  border-radius: 50%;
+  border-radius: 50%; /* 원형 버튼 */
   width: 40px;
   height: 40px;
   font-size: 20px;
@@ -82,92 +91,86 @@
   cursor: pointer;
 }
 
+/* 스왑 버튼: 기본 상태는 비활성화된 스타일 */
 .swap-button {
   width: 100%;
   padding: 15px;
   font-size: 18px;
-  background-color: #4b4b61;
-  color: #888;
+  background-color: #4b4b61; /* 비활성화된 버튼 색상 */
+  color: #888; /* 텍스트 회색 */
   border: none;
-  border-radius: 12px;
-  cursor: not-allowed;
+  border-radius: 12px; /* 둥근 모서리 */
+  cursor: not-allowed; /* 비활성화된 커서 */
   text-align: center;
 }
 
+/* 활성화된 스왑 버튼 스타일 */
 .swap-button.enabled {
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
+  background-color: #007bff; /* 파란색 배경 */
+  color: white; /* 흰색 텍스트 */
+  cursor: pointer; /* 클릭 가능 */
 }
 
+/* 푸터 스타일 */
 footer {
   margin-top: 20px;
   text-align: center;
-  color: #888;
+  color: #888; /* 회색 텍스트 */
 }
 
+/* 푸터 내 링크 스타일 */
 footer a {
-  color: #007bff;
+  color: #007bff; /* 파란색 링크 */
   text-decoration: none;
 }
 
-
-/* 메인 토큰 선택 버튼 */
-.token-select {
-  background-color: #3c3c4e;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 12px;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-/* 모달 오버레이 */
+/* 모달 오버레이: 모달이 활성화될 때 뒤 배경을 어둡게 */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.7); /* 반투명 검정 배경 */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1000; /* 높은 z-index로 상위 레이어에 표시 */
 }
 
-/* 모달 컨텐츠 */
+/* 모달 컨텐츠 스타일 */
 .modal-content {
-  background-color: #2c2c3e;
+  background-color: #2c2c3e; /* 어두운 배경 */
   padding: 20px;
-  border-radius: 12px;
-  width: 400px;
-  color: white;
+  border-radius: 12px; /* 둥근 모서리 */
+  width: 400px; /* 고정 너비 */
+  color: white; /* 흰색 텍스트 */
 }
 
-/* 모달 헤더 */
+/* 모달 헤더: 검색 필드와 닫기 버튼 */
 .modal-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* 양 끝에 요소 배치 */
   margin-bottom: 15px;
 }
 
+/* 모달 내 검색 입력 필드 */
 .modal-header input {
-  width: 80%;
+  width: 80%; /* 검색창 너비 */
   padding: 10px;
-  background-color: #1e1e2f;
+  background-color: #1e1e2f; /* 어두운 배경 */
   border: none;
-  border-radius: 8px;
+  border-radius: 8px; /* 둥근 모서리 */
   color: white;
 }
 
+/* 모달 닫기 버튼 */
 .modal-header button {
   background: none;
   border: none;
   color: white;
   font-size: 20px;
-  cursor: pointer;
+  cursor: pointer; /* 클릭 가능 */
 }
 
 /* 최근 토큰 목록 */
@@ -175,44 +178,47 @@ footer a {
   margin-bottom: 15px;
 }
 
+/* 최근 토큰 목록의 버튼 스타일 */
 .recent-tokens-list button {
-  background-color: #3c3c4e;
+  background-color: #3c3c4e; /* 어두운 배경 */
   border: none;
   padding: 8px 12px;
   margin-right: 5px;
-  border-radius: 8px;
+  border-radius: 8px; /* 둥근 모서리 */
   color: white;
-  cursor: pointer;
+  cursor: pointer; /* 클릭 가능 */
 }
 
-/* 토큰 목록 */
+/* 토큰 목록 스타일 */
 .token-list {
-  max-height: 300px;
-  overflow-y: auto;
+  max-height: 300px; /* 최대 높이, 스크롤 가능 */
+  overflow-y: auto; /* 세로 스크롤 */
 }
 
+/* 토큰 아이템: 각 토큰을 리스트로 표시 */
 .token-item {
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  background-color: #1f1f2e;
+  background-color: #1f1f2e; /* 어두운 배경 */
   margin-bottom: 5px;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: 8px; /* 둥근 모서리 */
+  cursor: pointer; /* 클릭 가능 */
 }
 
+/* 토큰 항목 호버 시 스타일 */
 .token-item:hover {
-  background-color: #3c3c4e;
+  background-color: #3c3c4e; /* 호버 시 더 밝은 배경색 */
 }
 
 /* 토큰 목록 관리 버튼 */
 .manage-tokens {
-  width: 100%;
-  background-color: #007bff;
+  width: 100%; /* 전체 너비 */
+  background-color: #007bff; /* 파란색 배경 */
   border: none;
   padding: 10px;
   margin-top: 15px;
-  border-radius: 8px;
-  color: #ffffff;
-  cursor: pointer;
+  border-radius: 8px; /* 둥근 모서리 */
+  color: #ffffff; /* 흰색 텍스트 */
+  cursor: pointer; /* 클릭 가능 */
 }
