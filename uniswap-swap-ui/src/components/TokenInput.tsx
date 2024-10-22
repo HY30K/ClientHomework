@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'; // React 및 필요한 hooks
 
 // TokenInput 컴포넌트가 받을 props의 타입을 정의
 interface TokenInputProps {
-  amount: string; // 입력된 금액
+  amount: string;                                                   // 입력된 금액
   onAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // 금액이 변경될 때 실행되는 함수
-  isFocused: boolean; // 해당 입력 필드가 포커스 되었는지 여부
-  setIsFocused: (focused: boolean) => void; // 포커스 상태를 변경하는 함수
-  selectedToken: string; // 선택된 토큰 심볼
-  onTokenSelect: () => void; // 토큰 선택 버튼을 눌렀을 때 호출되는 함수
+  isFocused: boolean;                                               // 해당 입력 필드가 포커스 되었는지 여부
+  setIsFocused: (focused: boolean) => void;                         // 포커스 상태를 변경하는 함수
+  selectedToken: string;                                            // 선택된 토큰 심볼
+  onTokenSelect: () => void;                                        // 토큰 선택 버튼을 눌렀을 때 호출되는 함수
 }
 
 // TokenInput 컴포넌트 선언, props를 TokenInputProps 타입으로 받음
@@ -44,19 +44,21 @@ const TokenInput: React.FC<TokenInputProps> = ({
       
       {/* 금액 입력 필드 */}
       <input
-        type="string"                      // 숫자 입력 필드
+        className="input"                  // 스타일을 위한 클래스 이름
+        type="number"                      // 숫자 입력 필드
         placeholder="0.0"                  // 기본 표시 텍스트
         value={amount}                     // 입력된 금액을 표시
         onChange={onAmountChange}          // 금액이 변경되면 onAmountChange 호출
-        className="input"                  // 스타일을 위한 클래스 이름
         onFocus={() => setIsFocused(true)} // 입력 필드가 포커스될 때 setIsFocused(true) 호출
         step="0.0000000001"                // 입력 가능 최소 단위
       />
 
       {/* 선택된 토큰을 표시하고, 클릭 시 토큰 선택 모달을 여는 버튼 */}
       <button className="token-select" onClick={onTokenSelect}>
-        {storedToken} {/* 현재 선택된 또는 저장된 토큰을 표시*/}
+        {selectedToken} {/* 현재 선택된 또는 저장된 토큰을 표시*/}
       </button>
+
+      
     </div>
   );
 };
