@@ -107,10 +107,10 @@ const App: React.FC = () => {
   };
 
   // 스왑 계산 함수 (From -> To)
-  const calculateSwap = (value: string) => (parseFloat(value) * SWAP_RATE).toFixed(2); // 입력값에 스왑 비율을 곱하여 소수점 2자리로 고정
+  const calculateSwap = (value: string) => (parseFloat(value) * SWAP_RATE).toFixed(); // 입력값에 스왑 비율을 곱하여 소수점 2자리로 고정
 
   // 스왑 계산 함수 (To -> From)
-  const calculateSwapReverse = (value: string) => (parseFloat(value) / SWAP_RATE).toFixed(2); // 입력값을 스왑 비율로 나누어 소수점 2자리로 고정
+  const calculateSwapReverse = (value: string) => (parseFloat(value) / SWAP_RATE).toFixed(10); // 입력값을 스왑 비율로 나누어 소수점 2자리로 고정
 
   return (
     <div className="App">
