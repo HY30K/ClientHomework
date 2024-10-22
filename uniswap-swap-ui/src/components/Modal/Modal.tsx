@@ -1,4 +1,7 @@
 import React from 'react';
+import TokenList from '../TokenList';
+import RecentTokensList from './RecentTokensList';
+import ModalHeader from './ModalHeader';
 
 // ModalProps 인터페이스 정의: 모달에 필요한 props를 정의
 interface ModalProps {
@@ -13,7 +16,7 @@ interface ModalProps {
 }
 
 // Modal 컴포넌트 선언
-const Modal: React.FC<ModalProps> = ({
+export default function Modal ({
     isOpen,
     onClose,
     onAlert,
@@ -22,7 +25,8 @@ const Modal: React.FC<ModalProps> = ({
     setSearchTerm,
     recentTokens,
     onTokenSelect,
-}) => {
+} : ModalProps) {
+    
     // 모달이 열려 있지 않다면 null을 반환하여 렌더링하지 않음
     if (!isOpen) return null;
 
@@ -65,69 +69,3 @@ const Modal: React.FC<ModalProps> = ({
         </div>
     );
 };
-
-// 모달 헤더 컴포넌트
-const ModalHeader: React.FC<{
-    searchTerm: string; // 현재 검색어 상태
-    setSearchTerm: (term: string) => void; // 검색어를 설정하는 함수
-    onClose: () => void; // 모달을 닫는 함수
-}> = ({ searchTerm, setSearchTerm, onClose }) => (
-    <div className="modal-header">
-
-        <input
-            type="text"
-            placeholder="이름 검색 또는 주소 붙여 넣기" // 입력 필드에 표시될 텍스트
-            value={searchTerm} // 입력된 검색어 상태
-            onChange={(e) => setSearchTerm(e.target.value)} // 검색어 변경 시 상태 업데이트
-        />
-
-        <button onClick={onClose}>X</button> {/* 모달 닫기 버튼 */}
-
-    </div>
-);
-
-// 최근 선택한 토큰 목록 컴포넌트
-const RecentTokensList: React.FC<{
-    recentTokens: string[]; // 최근 선택한 토큰 목록
-    onTokenSelect: (token: string) => void; // 토큰 선택 시 호출되는 함수
-}> = ({ recentTokens, onTokenSelect }) => (
-    <div className="recent-tokens">
-
-        <p>최근 선택한 토큰</p>
-
-        <div className="recent-tokens-list">
-            {recentTokens.map(token => (
-                <button
-                    key={token}
-                    onClick={() => onTokenSelect(token)}> {/* 토큰 선택 시 onTokenSelect 호출 */}
-                    {token} {/* 토큰 심볼 표시 */}
-                </button>
-            ))}
-        </div>
-
-    </div>
-);
-
-// 필터링된 토큰 목록 컴포넌트
-const TokenList: React.FC<{
-    filteredTokens: { symbol: string; name: string }[]; // 필터링된 토큰 목록
-    onTokenSelect: (token: string) => void; // 토큰 선택 시 호출되는 함수
-}> = ({ filteredTokens, onTokenSelect }) => (
-    <div className="token-list">
-
-        {filteredTokens.map(token => (
-            <div
-                className="token-item" // CSS 클래스명
-                key={token.symbol} // 각 토큰 항목의 고유 key는 토큰 심볼
-                onClick={() => onTokenSelect(token.symbol)} // 토큰 선택 시 onTokenSelect 호출
-            >
-
-                <span>{token.symbol}</span> {/* 토큰 심볼 표시 */}
-                <span>{token.name}</span> {/* 토큰 이름 표시 */}
-            </div>
-        ))}
-
-    </div>
-);
-
-export default Modal; // Modal 컴포넌트를 내보냄
