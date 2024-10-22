@@ -8,7 +8,11 @@ interface SwapButtonProps {
 }
 
 // SwapButton 컴포넌트 선언: SwapButtonProps 타입의 props를 받음
-const SwapButton: React.FC<SwapButtonProps> = ({ amountFrom, amountTo, onSwap }) => {
+const SwapButton: React.FC<SwapButtonProps> = ({
+  amountFrom,
+  amountTo,
+  onSwap
+}) => {
   // 버튼의 활성화 상태를 결정하는 변수
   const isEnabled = Boolean(amountFrom && amountTo); // amountFrom과 amountTo가 모두 존재하면 true
 
@@ -20,7 +24,7 @@ const SwapButton: React.FC<SwapButtonProps> = ({ amountFrom, amountTo, onSwap })
 
       // 버튼 클릭 시 onSwap 함수 호출
       onClick={isEnabled ? onSwap : undefined} // 버튼이 비활성화된 경우 클릭 이벤트 무시
-      
+
       // 금액이 입력되지 않은 경우 버튼 비활성화 (disabled)
       disabled={!isEnabled}
     >

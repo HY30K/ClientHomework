@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from 'react'; // React 및 필요한 hooks(useState, useEffect)를 가져옴
 import './App.css'; // 스타일 파일을 가져옴
+
 import TokenInput from './components/TokenInput'; // TokenInput 컴포넌트를 가져옴
 import SwapButton from './components/SwapButton'; // SwapButton 컴포넌트를 가져옴
-import Modal from './components/Modal'; // Modal 컴포넌트를 가져옴
+import SwapHeader from './components/SwapHeader'; // SwapHeader 컴포넌트를 가져옴
+import SwapArrow from './components/SwapArrow';   // SwapArrow 컴포넌트를 가져옴
+import Footer from './components/Footer';         // FOoter 컴포넌트를 가져옴
+import Modal from './components/Modal';           // Modal 컴포넌트를 가져옴
+import TOKEN_LIST from './TokenList';
 
-// 사용 가능한 토큰 목록을 정의
-const TOKEN_LIST = [
-  { symbol: 'ETH', name: 'Ether' },
-  { symbol: 'WETH', name: 'Wrapped Ether' },
-  { symbol: 'DAI', name: 'Dai' },
-  { symbol: 'USDC', name: 'USD Coin' },
-  { symbol: 'USDT', name: 'Tether' },
-  { symbol: 'WBTC', name: 'Wrapped Bitcoin' },
-  { symbol: 'AAVE', name: 'Aave' },
-];
 
-// 스왑 비율 상수
+// 스왑 비율 상수 (Test)
 const SWAP_RATE = 1.1;
 
 const App: React.FC = () => {
@@ -46,6 +41,7 @@ const App: React.FC = () => {
     loadTokensFromLocalStorage(); // 토큰 로드 함수 호출
   }, []);
 
+
   // 토큰 선택 및 최근 토큰 목록을 localStorage에 저장하는 useEffect
   useEffect(() => {
     localStorage.setItem('selectedToken1', selectedToken1);             // 첫 번째 토큰을 localStorage에 저장
@@ -53,8 +49,10 @@ const App: React.FC = () => {
     localStorage.setItem('recentTokens', JSON.stringify(recentTokens)); // 최근 선택한 토큰 목록을 JSON으로 변환하여 저장
   }, [selectedToken1, selectedToken2, recentTokens]);                   // 상태가 변경될 때마다 실행됨
 
+
   // 알림 함수 (사용자가 준비되지 않은 기능을 클릭할 때 호출)
   const handleAlert = () => alert('준비 중입니다'); // 알림 메시지 표시
+
 
   // 모달 열기 함수
   const handleOpenModal = (inputNumber: 1 | 2) => {
@@ -64,6 +62,7 @@ const App: React.FC = () => {
 
   // 모달 닫기 함수
   const handleCloseModal = () => setIsModalOpen(false); // 모달 닫기
+
 
   // 토큰 선택 처리 함수
   const handleTokenSelect = (token: string) => {
@@ -77,6 +76,7 @@ const App: React.FC = () => {
     handleCloseModal(); // 모달 닫기
   };
 
+
   // 최근 선택한 토큰 업데이트 함수 (최대 7개까지만 유지)
   const updateRecentTokens = (token: string) => {
     setRecentTokens(prev => {
@@ -86,10 +86,16 @@ const App: React.FC = () => {
     });
   };
 
+
   // From 입력 필드 값 변경 처리 함수
   const handleAmountFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value; // 입력된 값
     setAmountFrom(value);         // amountFrom 상태 업데이트
+
+    if (value === '') {
+      setAmountTo(''); // 빈 문자열이면 To 필드도 비우기
+      return;
+    }
 
     if (isFromFocused) {
       setAmountTo(calculateSwap(value)); // From 필드에 포커스가 있을 경우 To 필드 값 계산
@@ -106,20 +112,20 @@ const App: React.FC = () => {
     }
   };
 
-  // 스왑 계산 함수 (From -> To)
-  const calculateSwap = (value: string) => (parseFloat(value) * SWAP_RATE).toFixed(); // 입력값에 스왑 비율을 곱하여 소수점 2자리로 고정
 
+  // 스왑 계산 함수 (From -> To)
+  const calculateSwap = (value: string) => (parseFloat(value) * SWAP_RATE).toFixed(10); // 입력값에 스왑 비율을 곱하여 소수점 10자리로 고정
   // 스왑 계산 함수 (To -> From)
-  const calculateSwapReverse = (value: string) => (parseFloat(value) / SWAP_RATE).toFixed(10); // 입력값을 스왑 비율로 나누어 소수점 2자리로 고정
+  const calculateSwapReverse = (value: string) => (parseFloat(value) / SWAP_RATE).toFixed(10); // 입력값을 스왑 비율로 나누어 소수점 10자리로 고정
+
 
   return (
     <div className="App">
       <header className="App-header">
         <div className="swap-container">
-          <div className="swap-header">
-            <h3>스왑</h3>
-            <button className="settings-button" onClick={handleAlert}>⚙️</button> {/* 설정 버튼 */}
-          </div>
+          
+          {/* SwapHeader 컴포넌트 사용 */}
+          <SwapHeader onAlert={handleAlert} />
 
           {/* 첫 번째 TokenInput 컴포넌트 (From 필드) */}
           <TokenInput
@@ -132,9 +138,7 @@ const App: React.FC = () => {
           />
 
           {/* 스왑 화살표 */}
-          <div className="swap-arrow">
-            <button>⬇</button>
-          </div>
+          <SwapArrow />
 
           {/* 두 번째 TokenInput 컴포넌트 (To 필드) */}
           <TokenInput
@@ -154,9 +158,8 @@ const App: React.FC = () => {
           />
         </div>
 
-        <footer>
-          <p>Uniswap 사용 가능: <a href="/">English</a></p> {/* 언어 선택 링크 */}
-        </footer>
+        {/* Footer 컴포넌트 사용 */}
+        <Footer />
 
         {/* 모달 컴포넌트 */}
         <Modal

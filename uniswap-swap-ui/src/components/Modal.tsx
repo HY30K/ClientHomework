@@ -26,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({
     // 모달이 열려 있지 않다면 null을 반환하여 렌더링하지 않음
     if (!isOpen) return null;
 
-    // 필터링된 토큰 목록: 검색어를 기준으로 토큰 이름 또는 심볼에 일치하는 항목 필터링
+    // 필터링된 토큰 목록: 검색어를 기준으로 필터링
     const filteredTokens = tokens.filter(token =>
         token.name.toLowerCase().includes(searchTerm.toLowerCase()) || // 이름으로 필터링
         token.symbol.toLowerCase().includes(searchTerm.toLowerCase()) // 심볼로 필터링
@@ -73,13 +73,16 @@ const ModalHeader: React.FC<{
     onClose: () => void; // 모달을 닫는 함수
 }> = ({ searchTerm, setSearchTerm, onClose }) => (
     <div className="modal-header">
+
         <input
             type="text"
             placeholder="이름 검색 또는 주소 붙여 넣기" // 입력 필드에 표시될 텍스트
             value={searchTerm} // 입력된 검색어 상태
             onChange={(e) => setSearchTerm(e.target.value)} // 검색어 변경 시 상태 업데이트
         />
+
         <button onClick={onClose}>X</button> {/* 모달 닫기 버튼 */}
+
     </div>
 );
 
@@ -89,14 +92,19 @@ const RecentTokensList: React.FC<{
     onTokenSelect: (token: string) => void; // 토큰 선택 시 호출되는 함수
 }> = ({ recentTokens, onTokenSelect }) => (
     <div className="recent-tokens">
+
         <p>최근 선택한 토큰</p>
+
         <div className="recent-tokens-list">
             {recentTokens.map(token => (
-                <button key={token} onClick={() => onTokenSelect(token)}> {/* 토큰 선택 시 onTokenSelect 호출 */}
+                <button
+                    key={token}
+                    onClick={() => onTokenSelect(token)}> {/* 토큰 선택 시 onTokenSelect 호출 */}
                     {token} {/* 토큰 심볼 표시 */}
                 </button>
             ))}
         </div>
+
     </div>
 );
 
@@ -106,16 +114,19 @@ const TokenList: React.FC<{
     onTokenSelect: (token: string) => void; // 토큰 선택 시 호출되는 함수
 }> = ({ filteredTokens, onTokenSelect }) => (
     <div className="token-list">
+
         {filteredTokens.map(token => (
             <div
-                key={token.symbol} // 각 토큰 항목의 고유 key는 토큰 심볼
                 className="token-item" // CSS 클래스명
+                key={token.symbol} // 각 토큰 항목의 고유 key는 토큰 심볼
                 onClick={() => onTokenSelect(token.symbol)} // 토큰 선택 시 onTokenSelect 호출
             >
+
                 <span>{token.symbol}</span> {/* 토큰 심볼 표시 */}
                 <span>{token.name}</span> {/* 토큰 이름 표시 */}
             </div>
         ))}
+
     </div>
 );
 
