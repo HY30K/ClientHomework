@@ -1,4 +1,3 @@
-import React from 'react';
 import TokenList from '../TokenList';
 import RecentTokensList from './RecentTokensList';
 import ModalHeader from './ModalHeader';

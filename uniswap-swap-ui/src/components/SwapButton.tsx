@@ -1,5 +1,3 @@
-import React from 'react'; // React 라이브러리에서 React 기능을 가져옴
-
 // SwapButtonProps 인터페이스 정의: SwapButton 컴포넌트에 필요한 props 타입 정의
 interface SwapButtonProps {
   amountFrom: string; // 스왑할 첫 번째 토큰의 금액 (사용자가 입력한 값)
@@ -8,11 +6,11 @@ interface SwapButtonProps {
 }
 
 // SwapButton 컴포넌트 선언: SwapButtonProps 타입의 props를 받음
-const SwapButton: React.FC<SwapButtonProps> = ({
+export default function SwapButton ({
   amountFrom,
   amountTo,
   onSwap
-}) => {
+} : SwapButtonProps) {
   // 버튼의 활성화 상태를 결정하는 변수
   const isEnabled = Boolean(amountFrom && amountTo); // amountFrom과 amountTo가 모두 존재하면 true
 
@@ -33,6 +31,3 @@ const SwapButton: React.FC<SwapButtonProps> = ({
     </button>
   );
 };
-
-// 컴포넌트를 외부에서 사용할 수 있도록 내보내기
-export default SwapButton;

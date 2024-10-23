@@ -12,7 +12,7 @@ interface TokenInputProps {
 }
 
 // TokenInput 컴포넌트를 정의합니다.
-const TokenInput: React.FC<TokenInputProps> = ({
+export default function TokenInput({
   amount,         // 입력된 금액
   onAmountChange, // 금액 변경 핸들러
   isFocused,      // 포커스 상태
@@ -20,7 +20,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
   selectedToken,  // 선택된 토큰
   onTokenSelect,  // 토큰 선택 핸들러
   tokenPrice,     // 선택된 토큰의 가격
-}) => {
+}: TokenInputProps) {
   const [storedToken, setStoredToken] = useState<string>(selectedToken); // 상태 변수를 사용하여 저장된 토큰을 관리합니다.
 
   // 컴포넌트가 마운트될 때 로컬 스토리지에서 저장된 토큰을 불러옵니다.
@@ -53,12 +53,10 @@ const TokenInput: React.FC<TokenInputProps> = ({
         {selectedToken} {/* 선택된 토큰의 심볼 */}
       </button>
       {/* 선택된 토큰의 USD 가격 표시 */}
-      <div className="token-price"> 
-        {tokenPrice ? `$${tokenPrice.toFixed(2)}` : '가격 정보 없음'} {/* 가격이 있을 경우 표시 */}
-      </div>
+      {/* <div className="token-price"> 
+        {tokenPrice ? `$${tokenPrice.toFixed(2)}` : '가격 정보 없음'} {/* 가격이 있을 경우 표시 오류로 인해 주석처리}
+      </div> */}
     </div>
   );
 };
 
-// 컴포넌트를 외부에서 사용할 수 있도록 내보내기
-export default TokenInput; 
