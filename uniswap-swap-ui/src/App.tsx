@@ -52,12 +52,12 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
   // 'From' 토큰의 스왑 비율을 가져오기 위한 API 호출
   useEffect(() => {
     debouncedGetFromSwapRate(getTokenID(selectedTokenFrom)); // 선택된 'From' 토큰의 ID를 사용하여 비율을 가져옵니다.
-  }, [selectedTokenFrom]); // 'From' 토큰이 변경될 때마다 실행됩니다.
+  }, [selectedTokenFrom, selectedTokenTo, selectedTokenFrom]); // 'From' 토큰이 변경될 때마다 실행됩니다.
 
   // 'To' 토큰의 스왑 비율을 가져오기 위한 API 호출
   useEffect(() => {
     debouncedGetToSwapRate(getTokenID(selectedTokenTo)); // 선택된 'To' 토큰의 ID를 사용하여 비율을 가져옵니다.
-  }, [selectedTokenTo]); // 'To' 토큰이 변경될 때마다 실행됩니다.
+  }, [selectedTokenTo, selectedTokenTo, selectedTokenFrom]); // 'To' 토큰이 변경될 때마다 실행됩니다.
 
   // 주어진 토큰 심볼로부터 토큰 ID를 반환하는 함수
   const getTokenID = (symbol: string) => {
@@ -101,6 +101,14 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
     const fromValue = e.target.value; // 입력된 값 가져오기
     setAmountFrom(fromValue); // 'From' 금액 상태 업데이트
 
+    const amount = parseFloat(fromValue);
+    console.log(`AmountFrom as number: ${amount}`);
+    const calculatedAmountUSD = !isNaN(amount) ? amount * swapFromRate : 0;
+    console.log(`Calculated AmountFrom USD: ${calculatedAmountUSD}`);
+
+    setAmountFromUSD(calculatedAmountUSD);
+    setAmountToUSD(calculatedAmountUSD)
+
     if (fromValue === '') { // 입력값이 비어있으면
       setAmountTo(''); // 'To' 금액도 비워줌
       return; // 함수 종료
@@ -116,6 +124,14 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
     const toValue = e.target.value; // 입력된 값 가져오기
     setAmountTo(toValue); // 'To' 금액 상태 업데이트
 
+    const amount = parseFloat(toValue);
+    console.log(`AmountFrom as number: ${amount}`);
+    const calculatedAmountUSD = !isNaN(amount) ? amount * swapToRate : 0;
+    console.log(`Calculated AmountFrom USD: ${calculatedAmountUSD}`);
+
+    setAmountToUSD(calculatedAmountUSD);
+    setAmountFromUSD(calculatedAmountUSD);
+
     if (toValue === '') { // 입력값이 비어있으면
       setAmountFrom(''); // 'From' 금액도 비워줌
       return; // 함수 종료
@@ -129,20 +145,21 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
   // 'From' 스왑 비율을 가져오는 비동기 함수 (디바운스 적용)
   const debouncedGetFromSwapRate = debounce(async (ids: string) => {
     try {
-      const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}`);
+      const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}&x_cg_demo_api_key=My_key`);
       console.log("API Response:", res.data);
       const price = res.data[ids]?.usd;
       console.log(`Fetched price for ${ids}:`, price);
-  
+
       if (typeof price === "number") {
         setSwapFromRate(price);
-  
+
         // 문자열로 된 amountFrom을 숫자로 변환 후 계산
-        const amount = parseFloat(amountFrom);
-        console.log(`AmountFrom as number: ${amount}`);
-        const calculatedAmountUSD = !isNaN(amount) ? amount * price : 0;
-        console.log(`Calculated AmountFrom USD: ${calculatedAmountUSD}`);
-        setAmountFromUSD(calculatedAmountUSD);
+        // const amount = parseFloat(amountFrom);
+        // console.log(`AmountFrom as number: ${amount}`);
+        // const calculatedAmountUSD = !isNaN(amount) ? amount * price : 0;
+        // console.log(`Calculated AmountFrom USD: ${calculatedAmountUSD}`);
+
+        // setAmountFromUSD(calculatedAmountUSD);
       } else {
         console.warn(`Invalid price value for ${ids}:`, price);
         setSwapFromRate(0);
@@ -158,35 +175,36 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
 
   // 'To' 스왑 비율을 가져오는 비동기 함수 (디바운스 적용)
   const debouncedGetToSwapRate = debounce(async (ids: string) => {
-  try {
-    const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}`);
-    console.log("API Response:", res.data);
-    const price = res.data[ids]?.usd;
-    console.log(`Fetched price for ${ids}:`, price);
+    try {
+      const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}&x_cg_demo_api_key=My_key`);
+      console.log("API Response:", res.data);
+      const price = res.data[ids]?.usd;
+      console.log(`Fetched price for ${ids}:`, price);
 
-    if (typeof price === "number") {
-      setSwapToRate(price);
+      if (typeof price === "number") {
+        setSwapToRate(price);
 
-      // 문자열로 된 amountTo를 숫자로 변환 후 계산
-      const amount = parseFloat(amountTo);
-      console.log(`AmountTo as number: ${amount}`);
-      const calculatedAmountUSD = !isNaN(amount) ? amount * price : 0;
-      console.log(`Calculated AmountTo USD: ${calculatedAmountUSD}`);
-      setAmountToUSD(calculatedAmountUSD);
-    } else {
-      console.warn(`Invalid price value for ${ids}:`, price);
-      setSwapToRate(0);
-      setAmountToUSD(0);
+        // 문자열로 된 amountTo를 숫자로 변환 후 계산
+        // const amount = parseFloat(amountTo);
+        // console.log(`AmountTo as number: ${amount}`);
+        // const calculatedAmountUSD = !isNaN(amount) ? amount * price : 1;
+        // console.log(`Calculated AmountTo USD: ${calculatedAmountUSD}`);
+
+        // setAmountToUSD(calculatedAmountUSD);
+      } else {
+        console.warn(`Invalid price value for ${ids}:`, price);
+        setSwapToRate(0);
+        setAmountToUSD(0);
+      }
+    } catch (error) {
+      // 오류 처리
+      console.error(error);
     }
-  } catch (error) {
-    // 오류 처리
-    console.error(error);
-  }
-}, 1000);
+  }, 1000);
 
 
   // 'From' 금액 계산
-  const calculateFromSwap = (from: string) => ((parseFloat(from) * swapFromRate) /  swapToRate).toFixed(10); // 스왑 비율에 따라 'To' 금액 계산
+  const calculateFromSwap = (from: string) => ((parseFloat(from) * swapFromRate) / swapToRate).toFixed(10); // 스왑 비율에 따라 'To' 금액 계산
   // 'To' 금액 계산
   const calculateToSwap = (to: string) => ((parseFloat(to) * swapToRate) / swapFromRate).toFixed(10); // 스왑 비율에 따라 'From' 금액 계산
 
