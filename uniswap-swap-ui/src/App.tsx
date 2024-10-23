@@ -46,7 +46,7 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
   useEffect(() => {
     localStorage.setItem('selectedToken1', selectedTokenFrom);          // 'From' 토큰 저장
     localStorage.setItem('selectedToken2', selectedTokenTo);            // 'To' 토큰 저장
-    localStorage.setItem('recentTokens', JSON.stringify(recentTokens)); // 최근 토큰을 JSON 형식으로 저장
+    //localStorage.setItem('recentTokens', JSON.stringify(recentTokens)); // 최근 토큰을 JSON 형식으로 저장
   }, [selectedTokenFrom, selectedTokenTo, recentTokens]);               // 선택된 토큰이 변경될 때마다 실행됩니다.
 
   // 'From' 토큰의 스왑 비율을 가져오기 위한 API 호출
