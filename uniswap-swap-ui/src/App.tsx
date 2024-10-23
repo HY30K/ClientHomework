@@ -126,36 +126,48 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
   // 'From' 스왑 비율을 가져오는 비동기 함수 (디바운스 적용)
   const debouncedGetFromSwapRate = debounce(async (ids: string) => {
     try {
-      const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}`); // API 호출
+      const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}`);
       setSwapFromRate(res.data[ids]); // 스왑 비율 상태 업데이트
     } catch (error) {
-      const axiosError = error as AxiosError; // AxiosError 타입으로 변환
-      if (axiosError.response && axiosError.response.status === 429) { // 너무 많은 요청을 한 경우
-        const retryAfter = parseInt(axiosError.response.headers['retry-after'], 10); // 재시도 대기 시간 가져오기
-        console.log(`Too many requests. Retrying after ${retryAfter} seconds.`); // 로그 출력
-        setTimeout(() => debouncedGetFromSwapRate(ids), retryAfter * 1000); // 재시도
+      const axiosError = error as AxiosError;
+      
+      if (axiosError.response) {
+        if (axiosError.response.status === 429) { // 너무 많은 요청을 한 경우
+          const retryAfter = parseInt(axiosError.response.headers['retry-after'], 10) || 1; // 기본값 1초
+          console.log(`Too many requests. Retrying after ${retryAfter} seconds.`);
+          setTimeout(() => debouncedGetFromSwapRate(ids), retryAfter * 1000); // 재시도
+        } else {
+          console.error("API 호출 오류:", axiosError.response.status, axiosError.response.data); // 에러 로그 출력
+        }
       } else {
-        console.error("API 호출 오류:", error); // 에러 로그 출력
+        console.error("네트워크 오류:", error); // 네트워크 오류 처리
       }
     }
   }, 1000); // 1초 지연
+  
 
   // 'To' 스왑 비율을 가져오는 비동기 함수 (디바운스 적용)
   const debouncedGetToSwapRate = debounce(async (ids: string) => {
     try {
-      const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}`); // API 호출
-      setSwapToRate(res.data[ids]); // 스왑 비율 상태 업데이트
+      const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}`);
+      setSwapFromRate(res.data[ids]); // 스왑 비율 상태 업데이트
     } catch (error) {
-      const axiosError = error as AxiosError; // AxiosError 타입으로 변환
-      if (axiosError.response && axiosError.response.status === 429) { // 너무 많은 요청을 한 경우
-        const retryAfter = parseInt(axiosError.response.headers['retry-after'], 10); // 재시도 대기 시간 가져오기
-        console.log(`Too many requests. Retrying after ${retryAfter} seconds.`); // 로그 출력
-        setTimeout(() => debouncedGetToSwapRate(ids), retryAfter * 1000); // 재시도
+      const axiosError = error as AxiosError;
+      
+      if (axiosError.response) {
+        if (axiosError.response.status === 429) { // 너무 많은 요청을 한 경우
+          const retryAfter = parseInt(axiosError.response.headers['retry-after'], 10) || 1; // 기본값 1초
+          console.log(`Too many requests. Retrying after ${retryAfter} seconds.`);
+          setTimeout(() => debouncedGetToSwapRate(ids), retryAfter * 1000); // 재시도
+        } else {
+          console.error("API 호출 오류:", axiosError.response.status, axiosError.response.data); // 에러 로그 출력
+        }
       } else {
-        console.error("API 호출 오류:", error); // 에러 로그 출력
+        console.error("네트워크 오류:", error); // 네트워크 오류 처리
       }
     }
   }, 1000); // 1초 지연
+  
 
   // 'From' 금액 계산
   const calculateFromSwap = (value: string) => ((parseFloat(value) * swapFromRate) / swapToRate).toFixed(10); // 스왑 비율에 따라 'To' 금액 계산
