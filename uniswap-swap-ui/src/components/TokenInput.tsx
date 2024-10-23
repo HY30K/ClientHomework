@@ -39,23 +39,29 @@ export default function TokenInput({
   }, [storedToken]); // storedToken이 변경될 때마다 실행됩니다.
 
   return (
-    <div className="input-group"> {/* 입력 필드와 버튼을 감싸는 div */}
-      <input
-        className="input"                   // CSS 클래스 이름
-        type="number"                       // 숫자 입력 필드
-        placeholder="0.0"                   // 기본 플레이스홀더 텍스트
-        value={amount}                      // 입력 필드의 값
-        onChange={onAmountChange}           // 금액 변경 핸들러
-        onFocus={() => setIsFocused(true)}  // 포커스 상태를 true로 설정
-        step="0.0000000001"                 // 입력 단계 설정
-      />
-      <button className="token-select" onClick={onTokenSelect}> {/* 토큰 선택 버튼 */}
-        {selectedToken} {/* 선택된 토큰의 심볼 */}
-      </button>
+    <div>
+      <div className="input-group"> {/* 입력 필드와 버튼을 감싸는 div */}
+        <input
+          className="input"                   // CSS 클래스 이름
+          type="number"                       // 숫자 입력 필드
+          placeholder="0.0"                   // 기본 플레이스홀더 텍스트
+          value={amount}                      // 입력 필드의 값
+          onChange={onAmountChange}           // 금액 변경 핸들러
+          onFocus={() => setIsFocused(true)}  // 포커스 상태를 true로 설정
+          step="0.0000000001"                 // 입력 단계 설정
+        />
+        <button className="token-select" onClick={onTokenSelect}> {/* 토큰 선택 버튼 */}
+          {selectedToken} {/* 선택된 토큰의 심볼 */}
+        </button>
+      </div>
+
       {/* 선택된 토큰의 USD 가격 표시 */}
-      {/* <div className="token-price"> 
-        {tokenPrice ? `$${tokenPrice.toFixed(2)}` : '가격 정보 없음'} {/* 가격이 있을 경우 표시 오류로 인해 주석처리}
-      </div> */}
+      <div className="token-price">
+          {typeof tokenPrice === "number" && !isNaN(tokenPrice)
+            ? `$${tokenPrice.toFixed(2)}`
+            : '$0.00'}
+        </div>
+        
     </div>
   );
 };

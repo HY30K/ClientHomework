@@ -12,11 +12,13 @@ import debounce from 'lodash/debounce';           // lodash의 debounce 함수�
 
 const App: React.FC = () => { // App 컴포넌트를 정의합니다.
   // 상태 변수 선언
-  const [swapFromRate, setSwapFromRate] = useState<number>(1);                // 'From' 토큰의 스왑 비율을 관리하는 상태.
-  const [swapToRate, setSwapToRate] = useState<number>(1);                    // 'To' 토큰의 스왑 비율을 관리하는 상태.
+  const [swapFromRate, setSwapFromRate] = useState<number>(0);                // 'From' 토큰의 스왑 비율을 관리하는 상태.
+  const [swapToRate, setSwapToRate] = useState<number>(0);                    // 'To' 토큰의 스왑 비율을 관리하는 상태.
   const [amountFrom, setAmountFrom] = useState<string>('');                   // 'From' 입력 필드의 금액을 관리하는 상태.
   const [amountTo, setAmountTo] = useState<string>('');                       // 'To' 입력 필드의 금액을 관리하는 상태.
   const [isFromFocused, setIsFromFocused] = useState<boolean>(true);          // 'From' 입력 필드가 포커스되었는지 여부를 관리하는 상태.
+  const [amountFromUSD, setAmountFromUSD] = useState<number>(0);
+  const [amountToUSD, setAmountToUSD] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);             // 모달의 열림 여부를 관리하는 상태.
   const [selectedTokenFrom, setSelectedTokenFrom] = useState<string>('DAI');  // 선택된 'From' 토큰을 관리하는 상태.
   const [selectedTokenTo, setSelectedTokenTo] = useState<string>('USDC');     // 선택된 'To' 토큰을 관리하는 상태.
@@ -81,6 +83,7 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
       setSelectedTokenTo(token); // 'To' 토큰 선택
     }
     updateRecentTokens(token); // 최근 토큰 업데이트
+
     handleCloseModal(); // 모달 닫기
   };
 
@@ -95,31 +98,31 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
 
   // 'From' 입력 필드의 금액 변경을 처리하는 함수
   const handleAmountFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value; // 입력된 값 가져오기
-    setAmountFrom(value); // 'From' 금액 상태 업데이트
+    const fromValue = e.target.value; // 입력된 값 가져오기
+    setAmountFrom(fromValue); // 'From' 금액 상태 업데이트
 
-    if (value === '') { // 입력값이 비어있으면
+    if (fromValue === '') { // 입력값이 비어있으면
       setAmountTo(''); // 'To' 금액도 비워줌
       return; // 함수 종료
     }
 
     if (isFromFocused) { // 'From' 필드가 포커스되어 있다면
-      setAmountTo(calculateFromSwap(value)); // 스왑 계산 후 'To' 금액 업데이트
+      setAmountTo(calculateFromSwap(fromValue, amountTo)); // 스왑 계산 후 'To' 금액 업데이트
     }
   };
 
   // 'To' 입력 필드의 금액 변경을 처리하는 함수
   const handleAmountToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value; // 입력된 값 가져오기
-    setAmountTo(value); // 'To' 금액 상태 업데이트
+    const toValue = e.target.value; // 입력된 값 가져오기
+    setAmountTo(toValue); // 'To' 금액 상태 업데이트
 
-    if (value === '') { // 입력값이 비어있으면
+    if (toValue === '') { // 입력값이 비어있으면
       setAmountFrom(''); // 'From' 금액도 비워줌
       return; // 함수 종료
     }
 
     if (!isFromFocused) { // 'From' 필드가 포커스되지 않았다면
-      setAmountFrom(calculateToSwap(value)); // 스왑 계산 후 'From' 금액 업데이트
+      setAmountFrom(calculateToSwap(toValue, amountFrom)); // 스왑 계산 후 'From' 금액 업데이트
     }
   };
 
@@ -127,52 +130,65 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
   const debouncedGetFromSwapRate = debounce(async (ids: string) => {
     try {
       const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}`);
-      setSwapFromRate(res.data[ids]); // 스왑 비율 상태 업데이트
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      
-      if (axiosError.response) {
-        if (axiosError.response.status === 429) { // 너무 많은 요청을 한 경우
-          const retryAfter = parseInt(axiosError.response.headers['retry-after'], 10) || 1; // 기본값 1초
-          console.log(`Too many requests. Retrying after ${retryAfter} seconds.`);
-          setTimeout(() => debouncedGetFromSwapRate(ids), retryAfter * 1000); // 재시도
-        } else {
-          console.error("API 호출 오류:", axiosError.response.status, axiosError.response.data); // 에러 로그 출력
-        }
-      } else {
-        console.error("네트워크 오류:", error); // 네트워크 오류 처리
-      }
-    }
-  }, 1000); // 1초 지연
+      console.log("API Response:", res.data);
+      const price = res.data[ids]?.usd;
+      console.log(`Fetched price for ${ids}:`, price);
   
+      if (typeof price === "number") {
+        setSwapFromRate(price);
+  
+        // 문자열로 된 amountFrom을 숫자로 변환 후 계산
+        const amount = parseFloat(amountFrom);
+        console.log(`AmountFrom as number: ${amount}`);
+        const calculatedAmountUSD = !isNaN(amount) ? amount * price : 0;
+        console.log(`Calculated AmountFrom USD: ${calculatedAmountUSD}`);
+        setAmountFromUSD(calculatedAmountUSD);
+      } else {
+        console.warn(`Invalid price value for ${ids}:`, price);
+        setSwapFromRate(0);
+        setAmountFromUSD(0);
+      }
+    } catch (error) {
+      // 오류 처리
+      console.error(error);
+    }
+  }, 1000);
+
+
 
   // 'To' 스왑 비율을 가져오는 비동기 함수 (디바운스 적용)
   const debouncedGetToSwapRate = debounce(async (ids: string) => {
-    try {
-      const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}`);
-      setSwapFromRate(res.data[ids]); // 스왑 비율 상태 업데이트
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      
-      if (axiosError.response) {
-        if (axiosError.response.status === 429) { // 너무 많은 요청을 한 경우
-          const retryAfter = parseInt(axiosError.response.headers['retry-after'], 10) || 1; // 기본값 1초
-          console.log(`Too many requests. Retrying after ${retryAfter} seconds.`);
-          setTimeout(() => debouncedGetToSwapRate(ids), retryAfter * 1000); // 재시도
-        } else {
-          console.error("API 호출 오류:", axiosError.response.status, axiosError.response.data); // 에러 로그 출력
-        }
-      } else {
-        console.error("네트워크 오류:", error); // 네트워크 오류 처리
-      }
+  try {
+    const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=${ids}`);
+    console.log("API Response:", res.data);
+    const price = res.data[ids]?.usd;
+    console.log(`Fetched price for ${ids}:`, price);
+
+    if (typeof price === "number") {
+      setSwapToRate(price);
+
+      // 문자열로 된 amountTo를 숫자로 변환 후 계산
+      const amount = parseFloat(amountTo);
+      console.log(`AmountTo as number: ${amount}`);
+      const calculatedAmountUSD = !isNaN(amount) ? amount * price : 0;
+      console.log(`Calculated AmountTo USD: ${calculatedAmountUSD}`);
+      setAmountToUSD(calculatedAmountUSD);
+    } else {
+      console.warn(`Invalid price value for ${ids}:`, price);
+      setSwapToRate(0);
+      setAmountToUSD(0);
     }
-  }, 1000); // 1초 지연
-  
+  } catch (error) {
+    // 오류 처리
+    console.error(error);
+  }
+}, 1000);
+
 
   // 'From' 금액 계산
-  const calculateFromSwap = (value: string) => ((parseFloat(value) * swapFromRate) / swapToRate).toFixed(10); // 스왑 비율에 따라 'To' 금액 계산
+  const calculateFromSwap = (from: string, to: string) => ((parseFloat(from) * swapFromRate) / ((parseFloat(to) * swapToRate))).toFixed(10); // 스왑 비율에 따라 'To' 금액 계산
   // 'To' 금액 계산
-  const calculateToSwap = (value: string) => ((parseFloat(value) * swapToRate) / swapFromRate).toFixed(10); // 스왑 비율에 따라 'From' 금액 계산
+  const calculateToSwap = (to: string, from: string) => ((parseFloat(to) * swapToRate) / ((parseFloat(from) *swapFromRate))).toFixed(10); // 스왑 비율에 따라 'From' 금액 계산
 
   return (
     <div className="App"> {/* 전체 앱을 감싸는 div */}
@@ -186,7 +202,7 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
             setIsFocused={setIsFromFocused}           // 포커스 설정 핸들러
             selectedToken={selectedTokenFrom}         // 선택된 'From' 토큰
             onTokenSelect={() => handleOpenModal(1)}  // 모달 열기 핸들러
-            tokenPrice={swapFromRate}                 // 선택된 토큰의 가격
+            tokenPrice={amountFromUSD}                // 선택된 토큰의 가격
           />
           <SwapArrow /> {/* 스왑 화살표 */}
           <TokenInput
@@ -196,7 +212,7 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
             setIsFocused={() => setIsFromFocused(false)}  // 포커스 설정 핸들러
             selectedToken={selectedTokenTo}               // 선택된 'To' 토큰
             onTokenSelect={() => handleOpenModal(2)}      // 모달 열기 핸들러
-            tokenPrice={swapToRate}                       // 선택된 토큰의 가격
+            tokenPrice={amountToUSD}                      // 선택된 토큰의 가격
           />
           <SwapButton
             amountFrom={amountFrom} // 'From' 금액
