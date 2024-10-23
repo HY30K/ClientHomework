@@ -107,7 +107,7 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
     }
 
     if (isFromFocused) { // 'From' 필드가 포커스되어 있다면
-      setAmountTo(calculateFromSwap(fromValue, amountTo)); // 스왑 계산 후 'To' 금액 업데이트
+      setAmountTo(calculateFromSwap(fromValue)); // 스왑 계산 후 'To' 금액 업데이트
     }
   };
 
@@ -122,7 +122,7 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
     }
 
     if (!isFromFocused) { // 'From' 필드가 포커스되지 않았다면
-      setAmountFrom(calculateToSwap(toValue, amountFrom)); // 스왑 계산 후 'From' 금액 업데이트
+      setAmountFrom(calculateToSwap(toValue)); // 스왑 계산 후 'From' 금액 업데이트
     }
   };
 
@@ -186,9 +186,9 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
 
 
   // 'From' 금액 계산
-  const calculateFromSwap = (from: string, to: string) => ((parseFloat(from) * swapFromRate) /  swapToRate).toFixed(10); // 스왑 비율에 따라 'To' 금액 계산
+  const calculateFromSwap = (from: string) => ((parseFloat(from) * swapFromRate) /  swapToRate).toFixed(10); // 스왑 비율에 따라 'To' 금액 계산
   // 'To' 금액 계산
-  const calculateToSwap = (to: string, from: string) => ((parseFloat(to) * swapToRate) / swapFromRate).toFixed(10); // 스왑 비율에 따라 'From' 금액 계산
+  const calculateToSwap = (to: string) => ((parseFloat(to) * swapToRate) / swapFromRate).toFixed(10); // 스왑 비율에 따라 'From' 금액 계산
 
   return (
     <div className="App"> {/* 전체 앱을 감싸는 div */}
