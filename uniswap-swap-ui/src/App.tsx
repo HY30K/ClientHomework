@@ -186,9 +186,9 @@ const App: React.FC = () => { // App 컴포넌트를 정의합니다.
 
 
   // 'From' 금액 계산
-  const calculateFromSwap = (from: string, to: string) => ((parseFloat(from) * swapFromRate) / ((parseFloat(to) * swapToRate))).toFixed(10); // 스왑 비율에 따라 'To' 금액 계산
+  const calculateFromSwap = (from: string, to: string) => ((parseFloat(from) * swapFromRate) /  swapToRate).toFixed(10); // 스왑 비율에 따라 'To' 금액 계산
   // 'To' 금액 계산
-  const calculateToSwap = (to: string, from: string) => ((parseFloat(to) * swapToRate) / ((parseFloat(from) *swapFromRate))).toFixed(10); // 스왑 비율에 따라 'From' 금액 계산
+  const calculateToSwap = (to: string, from: string) => ((parseFloat(to) * swapToRate) / swapFromRate).toFixed(10); // 스왑 비율에 따라 'From' 금액 계산
 
   return (
     <div className="App"> {/* 전체 앱을 감싸는 div */}
